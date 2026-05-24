@@ -1118,72 +1118,14 @@
   }
 
   function showSubmitSuccess(data) {
-    var previewHtml = '<div style="text-align:left;">';
-    previewHtml += '<p style="font-size:18px;margin-bottom:12px;">✅ <strong>提交成功！</strong></p>';
-    previewHtml += '<p style="margin-bottom:16px;color:#6b7280;">请选择以下方式将数据发送给我们：</p>';
-
-    previewHtml += '<div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">';
-    previewHtml += '<button onclick="downloadJSON()" style="padding:10px 20px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;">📥 下载 JSON 文件</button>';
-    previewHtml += '<button onclick="copyDataToClipboard()" style="padding:10px 20px;background:#16a34a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;">📋 复制全部数据</button>';
-    previewHtml += '<button onclick="sendViaEmail()" style="padding:10px 20px;background:#ea580c;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;">✉️ 直接发邮件</button>';
-    previewHtml += '</div>';
-
-    previewHtml += '<details style="margin-top:12px;"><summary style="cursor:pointer;color:#6b7280;font-size:13px;">预览数据（点击展开）</summary>';
-    previewHtml += '<div id="json-preview" style="background:#f9fafb;padding:16px;border-radius:10px;font-size:11px;max-height:300px;overflow:auto;white-space:pre-wrap;font-family:monospace;margin-top:8px;"></div>';
-    previewHtml += '</details>';
-
-    previewHtml += '<p style="margin-top:20px;font-size:13px;color:#6b7280;">我们会在 <strong>3 个工作日内</strong>与您联系并提供初步方案。<br>感谢您的信任！</p>';
+    var previewHtml = '<div style="text-align:center;">';
+    previewHtml += '<p style="font-size:48px;margin-bottom:12px;">✅</p>';
+    previewHtml += '<p style="font-size:20px;margin-bottom:8px;font-weight:700;">提交成功！</p>';
+    previewHtml += '<p style="font-size:14px;color:#6b7280;margin-top:16px;">我们会在 <strong>3 个工作日内</strong>与您联系并提供初步方案。<br>感谢您的信任！</p>';
     previewHtml += '</div>';
 
     document.getElementById('result-preview').innerHTML = previewHtml;
-    document.getElementById('json-preview').textContent = JSON.stringify(data, null, 2);
-
     document.getElementById('btn-submit').classList.add('hidden');
-  }
-
-  function downloadJSON() {
-    const data = window.__formData || {};
-    const company = data['企业名称'] || '客户';
-    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'AI需求确认表_' + company + '.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    alert('✅ JSON 文件已下载！请通过微信/邮件发送给我们。');
-  }
-
-  function copyDataToClipboard() {
-    const data = window.__formData || {};
-    const text = JSON.stringify(data, null, 2);
-    navigator.clipboard.writeText(text).then(() => {
-      alert('✅ 数据已复制！请粘贴到微信/邮件发给我们。');
-    }).catch(() => {
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      alert('✅ 数据已复制！请粘贴到微信/邮件发给我们。');
-    });
-  }
-
-  function sendViaEmail() {
-    const data = window.__formData || {};
-    const company = data['企业名称'] || '客户';
-    let body = '=== 企业AI数字化助手需求确认表 ===%0A%0A';
-    for (const [key, value] of Object.entries(data)) {
-      body += '%【' + key + '】%0A' + value.replace(/\n/g,'%0A') + '%0A%0A';
-    }
-    const yourEmail = 'parentinglove313@163.com';
-    const mailtoLink = 'mailto:' + yourEmail
-      + '?subject=' + encodeURIComponent('【需求确认】' + company)
-      + '&body=' + body;
-    window.location.href = mailtoLink;
   }
 
   // Init
