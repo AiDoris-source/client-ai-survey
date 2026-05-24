@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>企业 AI 数字化助手需求确认表</title>
   <style>
     :root {
@@ -874,6 +877,8 @@
 </div>
 
 <script>
+  // v2.1 - 2026-05-24T23:05 UTC+8 - Vercel deploy + button fix
+  console.log('📋 表单版本 v2.1 | Vercel API');
   let currentStep = 0;
   const totalSteps = 5;
   const stepTitles = ['基本信息', '模块确认', '逐一澄清', '补充信息', '确认提交'];
@@ -1057,20 +1062,27 @@
   }
 
   function submitForm() {
-    const email = document.getElementById('f-email').value;
-    if (!email) {
-      alert('请填写邮箱地址，以便我们向您发送方案。');
-      return;
+    try {
+      const emailEl = document.getElementById('f-email');
+      if (!emailEl) { alert('系统错误：找不到邮箱输入框，请刷新页面后重试。'); return; }
+      const email = emailEl.value;
+      if (!email) {
+        alert('请填写邮箱地址，以便我们向您发送方案。');
+        return;
+      }
+
+      const data = collectFormData();
+      window.__formData = data;
+
+      // 立即显示成功页面，不卡用户
+      showSubmitSuccess(data);
+      
+      // 后台静默尝试同步到腾讯文档（5秒超时）
+      tryBackgroundSync(data);
+    } catch(e) {
+      console.error('提交失败:', e);
+      alert('提交失败：' + e.message + '\n请截图此提示并发给卓恩。');
     }
-
-    const data = collectFormData();
-    window.__formData = data;
-
-    // 立即显示成功页面，不卡用户
-    showSubmitSuccess(data);
-    
-    // 后台静默尝试同步到腾讯文档（5秒超时）
-    tryBackgroundSync(data);
   }
 
   function tryBackgroundSync(data) {
