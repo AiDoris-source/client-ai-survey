@@ -993,6 +993,69 @@
     if (prevEl) prevEl.textContent = nextActions.length ? nextActions.join('、') : '（未选择）';
   }
 
+  function collectFormData() {
+    const data = {};
+
+    // Step 0: 基本信息
+    data['企业名称'] = document.getElementById('f-company').value || '（未填写）';
+    data['所属行业'] = document.getElementById('f-industry').value || '（未填写）';
+    const sizeEl = document.querySelector('input[name="f-size"]:checked');
+    data['企业规模'] = sizeEl ? sizeEl.value : '（未填写）';
+    data['业务负责人'] = document.getElementById('f-owner').value || '（未填写）';
+    data['预计启动时间'] = document.getElementById('f-start-date').value || '（未填写）';
+    data['预算范围'] = document.getElementById('f-budget').value || '（未填写）';
+    data['现有工具'] = document.getElementById('f-existing-tools').value || '（未填写）';
+
+    // Step 1: 模块确认
+    ['kb','fq','jx','kh','qywx'].forEach(key => {
+      const nameMap = {kb:'AI知识库',fq:'发圈助手',jx:'绩效助手',kh:'获客助手',qywx:'企业微信迁移'};
+      const checked = document.querySelector('input[name="m-'+key+'"]:checked');
+      data[nameMap[key]+'_是否需要'] = checked ? checked.value : '（未选择）';
+      const pri = document.getElementById('p-'+key).value;
+      data[nameMap[key]+'_优先级'] = pri==='high'?'高':pri==='mid'?'中':pri==='low'?'低':'（未设置）';
+      data[nameMap[key]+'_补充说明'] = document.getElementById('t-'+key).value || '（无）';
+    });
+
+    // Step 2: 逐一澄清 - 知识库
+    const kbDocs = document.getElementById('d-kb-docs').value;
+    if (kbDocs) data['知识库_文档数量'] = kbDocs;
+    const kbAuth = document.querySelector('input[name="d-kb-auth"]:checked');
+    if (kbAuth) data['知识库_权限隔离'] = kbAuth.value;
+    const kbSensitive = document.getElementById('d-kb-sensitive').value;
+    if (kbSensitive) data['知识库_敏感数据'] = kbSensitive;
+    const kbVideo = document.querySelector('input[name="d-kb-video"]:checked');
+    if (kbVideo) data['知识库_视频字幕'] = kbVideo.value;
+
+    // Step 2: 绩效助手
+    const jxGoal = document.querySelector('input[name="d-jx-goal"]:checked');
+    if (jxGoal) data['绩效助手_目标效果'] = jxGoal.value;
+    const jxHeartbeat = document.getElementById('d-jx-heartbeat').value;
+    if (jxHeartbeat) data['绩效助手_心跳机制'] = jxHeartbeat;
+    const jxPrivacy = document.querySelector('input[name="d-jx-privacy"]:checked');
+    if (jxPricacy) data['绩效助手_隐私数据'] = jxPrivacy.value;
+
+    // Step 3: 补充信息
+    const success = document.getElementById('s-success').value;
+    if (success) data['成功标准'] = success;
+    const deadline = document.getElementById('s-deadline').value;
+    if (deadline) data['硬性时间节点'] = deadline;
+    const compliance = document.getElementById('s-compliance').value;
+    if (compliance) data['合规要求'] = compliance;
+    const other = document.getElementById('s-other').value;
+    if (other) data['其他需求'] = other;
+
+    // 下一步期望
+    const nextActs = [];
+    document.querySelectorAll('#step-3 input[type="checkbox"]:checked').forEach(cb => nextActs.push(cb.value));
+    data['下一步期望'] = nextActs.length ? nextActs.join('、') : '（未选择）';
+
+    data['提交时间'] = new Date().toLocaleString('zh-CN', {timeZone:'Asia/Shanghai'});
+    data['客户邮箱'] = document.getElementById('f-email').value;
+    data['客户手机'] = document.getElementById('f-phone').value || '（未填写）';
+
+    return data;
+  }
+
   function submitForm() {
     const email = document.getElementById('f-email').value;
     if (!email) {
@@ -1000,27 +1063,83 @@
       return;
     }
 
-    // Build final data object
-    const data = {
-      company: document.getElementById('f-company').value,
-      industry: document.getElementById('f-industry').value,
-      owner: document.getElementById('f-owner').value,
-      email: email,
-      phone: document.getElementById('f-phone').value,
-      submittedAt: new Date().toISOString()
-    };
+    const data = collectFormData();
+    window.__formData = data;
 
-    // In production: send to backend / 腾讯文档 / 企微机器人
-    // For now: download as JSON
+    // 显示成功页面：提供下载 + 复制 + 邮件三种方式
+    showSubmitSuccess(data);
+  }
+
+  function showSubmitSuccess(data) {
+    const company = data['企业名称'] || '客户';
+
+    let previewHtml = '<div style="text-align:left;">';
+    previewHtml += '<p style="font-size:18px;margin-bottom:12px;">✅ <strong>提交成功！</strong></p>';
+    previewHtml += '<p style="margin-bottom:16px;color:#6b7280;">请选择以下任一方式，将表单数据发给我们：</p>';
+
+    previewHtml += '<div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">';
+    previewHtml += '<button onclick="downloadJSON()" style="padding:10px 20px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;">📥 下载 JSON 文件</button>';
+    previewHtml += '<button onclick="copyDataToClipboard()" style="padding:10px 20px;background:#16a34a;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;">📋 复制全部数据</button>';
+    previewHtml += '<button onclick="sendViaEmail()" style="padding:10px 20px;background:#ea580c;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;">✉️ 直接发邮件</button>';
+    previewHtml += '</div>';
+
+    previewHtml += '<details style="margin-top:12px;"><summary style="cursor:pointer;color:#6b7280;font-size:13px;">预览数据（点击展开）</summary>';
+    previewHtml += '<div id="json-preview" style="background:#f9fafb;padding:16px;border-radius:10px;font-size:11px;max-height:300px;overflow:auto;white-space:pre-wrap;font-family:monospace;margin-top:8px;"></div>';
+    previewHtml += '</details>';
+
+    previewHtml += '<p style="margin-top:20px;font-size:13px;color:#6b7280;">我们会在 <strong>3 个工作日内</strong>与您联系并提供初步方案。<br>感谢您的信任！</p>';
+    previewHtml += '</div>';
+
+    document.getElementById('result-preview').innerHTML = previewHtml;
+    document.getElementById('json-preview').textContent = JSON.stringify(data, null, 2);
+
+    document.getElementById('btn-submit').classList.add('hidden');
+  }
+
+  function downloadJSON() {
+    const data = window.__formData || {};
+    const company = data['企业名称'] || '客户';
     const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'AI需求确认表_' + (data.company || '客户') + '.json';
+    a.download = 'AI需求确认表_' + company + '.json';
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    alert('✅ JSON 文件已下载！请通过微信/邮件发送给我们。');
+  }
 
-    alert('提交成功！\n\n我们将根据您填写的内容，在 3 个工作日内与您联系并提供初步方案。\n\n感谢您的信任！');
+  function copyDataToClipboard() {
+    const data = window.__formData || {};
+    const text = JSON.stringify(data, null, 2);
+    navigator.clipboard.writeText(text).then(() => {
+      alert('✅ 数据已复制！请粘贴到微信/邮件发给我们。');
+    }).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      alert('✅ 数据已复制！请粘贴到微信/邮件发给我们。');
+    });
+  }
+
+  function sendViaEmail() {
+    const data = window.__formData || {};
+    const company = data['企业名称'] || '客户';
+    let body = '=== 企业AI数字化助手需求确认表 ===%0A%0A';
+    for (const [key, value] of Object.entries(data)) {
+      body += '%【' + key + '】%0A' + value.replace(/\n/g,'%0A') + '%0A%0A';
+    }
+    // 收件人改成你的邮箱（请替换下面这行）
+    const yourEmail = 'zhuoen@yourcompany.com';
+    const mailtoLink = 'mailto:' + yourEmail
+      + '?subject=' + encodeURIComponent('【需求确认】' + company)
+      + '&body=' + body;
+    window.location.href = mailtoLink;
   }
 
   // Init
