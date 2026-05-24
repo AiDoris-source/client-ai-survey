@@ -1066,16 +1066,50 @@
     const data = collectFormData();
     window.__formData = data;
 
-    // 显示成功页面：提供下载 + 复制 + 邮件三种方式
-    showSubmitSuccess(data);
+    // 先尝试自动写入腾讯文档智能表格
+    tryAutoSync(data);
   }
 
-  function showSubmitSuccess(data) {
+  function tryAutoSync(data) {
+    const btnSubmit = document.getElementById('btn-submit');
+    btnSubmit.textContent = '正在同步...';
+    btnSubmit.disabled = true;
+
+    fetch('http://localhost:8765/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    })
+    .then(res => res.json())
+    .then(result => {
+      btnSubmit.textContent = '确认提交';
+      btnSubmit.disabled = false;
+      if (result.ok) {
+        showSubmitSuccess(data, true);
+      } else {
+        showSubmitSuccess(data, false);
+      }
+    })
+    .catch(() => {
+      // 桥接服务未运行，走手动提交流程
+      btnSubmit.textContent = '确认提交';
+      btnSubmit.disabled = false;
+      showSubmitSuccess(data, false);
+    });
+  }
+
+  function showSubmitSuccess(data, autoSynced) {
     const company = data['企业名称'] || '客户';
+
+    let syncBadge = '';
+    if (autoSynced) {
+      syncBadge = '<div style="background:#ecfdf5;border:1px solid #16a34a;border-radius:10px;padding:12px 16px;margin-bottom:16px;text-align:center;">✅ <strong>数据已自动写入腾讯文档智能表格</strong><br><span style="font-size:12px;color:#6b7280;">你可在腾讯文档后台实时查看</span></div>';
+    }
 
     let previewHtml = '<div style="text-align:left;">';
     previewHtml += '<p style="font-size:18px;margin-bottom:12px;">✅ <strong>提交成功！</strong></p>';
-    previewHtml += '<p style="margin-bottom:16px;color:#6b7280;">请选择以下任一方式，将表单数据发给我们：</p>';
+    previewHtml += syncBadge;
+    previewHtml += '<p style="margin-bottom:16px;color:#6b7280;">数据已记录，也可通过以下方式手动发送：</p>';
 
     previewHtml += '<div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">';
     previewHtml += '<button onclick="downloadJSON()" style="padding:10px 20px;background:#2563eb;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px;">📥 下载 JSON 文件</button>';
