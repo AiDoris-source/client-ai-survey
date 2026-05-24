@@ -1,4 +1,5 @@
 // Vercel Serverless Function: 接收客户表单 → 写入腾讯文档智能表格
+// 部署后访问：https://your-project.vercel.app/api/submit
 
 const API_BASE = 'https://docs.qq.com/openapi/mcp';
 const AUTH_TOKEN = 'c5740f5711d94f1390212a5f0717b01d';
@@ -21,7 +22,7 @@ const FIELD_ORDER = [
   '下一步期望', '提交时间'
 ];
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -92,4 +93,4 @@ export default async function handler(req, res) {
   } catch (e) {
     return res.status(200).json({ ok: false, error: e.message });
   }
-}
+};
