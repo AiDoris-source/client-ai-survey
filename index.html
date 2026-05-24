@@ -1077,7 +1077,7 @@
     const ctrl = new AbortController();
     const timeout = setTimeout(() => ctrl.abort(), 5000);
 
-    fetch('http://localhost:9876/submit', {
+    fetch('https://2026-05-24-08-53-54.vercel.app/api/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
