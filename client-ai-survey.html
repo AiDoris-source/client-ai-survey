@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>企业 AI 数字化助手需求确认表</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-soft: #eff6ff;
+      --primary-dark: #1d4ed8;
+      --bg: #f0f4ff;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --green: #16a34a;
+      --orange: #ea580c;
+      --red: #dc2626;
+      --shadow: 0 8px 30px rgba(15,23,42,0.08);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    /* ===== Header ===== */
+    .header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+      color: #fff;
+      padding: 36px 0 0;
+    }
+    .header-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px 32px;
+    }
+    .header .eyebrow {
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.75;
+      margin-bottom: 10px;
+    }
+    .header h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+    .header p { font-size: 14px; opacity: 0.85; }
+
+    /* ===== Stepper ===== */
+    .stepper {
+      display: flex;
+      gap: 0;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      top: 1px;
+    }
+    .step-tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px 8px;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px 12px 0 0;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.7);
+      position: relative;
+    }
+    .step-tab:hover { background: rgba(255,255,255,0.4); }
+    .step-tab.active {
+      background: var(--bg);
+      color: var(--primary);
+    }
+    .step-tab.done {
+      background: rgba(255,255,255,0.5);
+      color: #fff;
+    }
+    .step-tab .step-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      font-size: 11px;
+      margin-right: 6px;
+      background: rgba(255,255,255,0.3);
+    }
+    .step-tab.active .step-num { background: var(--primary); color: #fff; }
+    .step-tab.done .step-num { background: var(--green); color: #fff; }
+
+    /* ===== Main Container ===== */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 32px 24px 120px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-desc {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    /* ===== Form Elements ===== */
+    .form-group { margin-bottom: 20px; }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .form-label .required { color: var(--red); margin-left: 2px; }
+    .form-label .optional { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 6px; }
+
+    .form-hint {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
+    }
+    textarea { min-height: 80px; resize: vertical; }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* ===== Radio / Checkbox ===== */
+    .radio-group, .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .radio-item, .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 14px;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .radio-item:hover, .checkbox-item:hover {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+    .radio-item.selected, .checkbox-item.selected {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+    .radio-item input, .checkbox-item input { margin-top: 3px; flex-shrink: 0; }
+
+    .radio-label { font-size: 14px; line-height: 1.5; }
+    .radio-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    /* ===== Module Card ===== */
+    .module-card {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: border-color 0.2s;
+    }
+    .module-card:hover { border-color: var(--primary); }
+
+    .module-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .module-name { font-size: 16px; font-weight: 800; }
+    .module-tag {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .tag-high { background: #fef2f2; color: var(--red); }
+    .tag-mid { background: #fff7ed; color: var(--orange); }
+    .tag-low { background: #ecfdf5; color: var(--green); }
+
+    /* ===== Priority Selector ===== */
+    .priority-selector {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .priority-btn {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .priority-btn:hover { border-color: var(--primary); }
+    .priority-btn.selected-high { background: #fef2f2; border-color: var(--red); color: var(--red); }
+    .priority-btn.selected-mid { background: #fff7ed; border-color: var(--orange); color: var(--orange); }
+    .priority-btn.selected-low { background: #ecfdf5; border-color: var(--green); color: var(--green); }
+
+    /* ===== Progress Bar ===== */
+    .progress-wrap {
+      margin-bottom: 28px;
+    }
+    .progress-bar {
+      height: 6px;
+      background: var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), #7c3aed);
+      border-radius: 999px;
+      transition: width 0.4s ease;
+    }
+    .progress-text {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    /* ===== Navigation ===== */
+    .nav-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #fff;
+      border-top: 1px solid var(--line);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+    }
+    .nav-bar .btn {
+      padding: 10px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-prev {
+      background: #f3f4f6;
+      color: var(--text);
+    }
+    .btn-prev:hover { background: #e5e7eb; }
+    .btn-next {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-next:hover { background: var(--primary-dark); }
+    .btn-submit {
+      background: var(--green);
+      color: #fff;
+    }
+    .btn-submit:hover { background: #15803d; }
+
+    /* ===== Result Preview ===== */
+    .result-section { margin-bottom: 24px; }
+    .result-section h3 {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-soft);
+    }
+    .result-row {
+      display: flex;
+      padding: 8px 0;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 14px;
+    }
+    .result-row .label {
+      width: 140px;
+      flex-shrink: 0;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .result-row .value { flex: 1; }
+
+    .result-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 8px;
+    }
+    .result-table th, .result-table td {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    .result-table th { background: #f9fafb; font-weight: 700; }
+
+    /* ===== Utility ===== */
+    .hidden { display: none !important; }
+    .divider { border: none; border-top: 1px solid var(--line); margin: 20px 0; }
+
+    .tip-box {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      border-radius: 0 10px 10px 0;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #92400e;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 640px) {
+      .input-row { grid-template-columns: 1fr; }
+      .stepper { overflow-x: auto; }
+      .step-tab { font-size: 11px; padding: 10px 6px; }
+      .header h1 { font-size: 20px; }
+      .card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <div class="header-inner">
+    <div class="eyebrow">AI 数字化助手体系建设 · 需求确认</div>
+    <h1>企业需求澄清问卷</h1>
+    <p>请按步骤填写，约需 10-15 分钟。您的回答将直接决定方案设计方向。</p>
+  </div>
+  <div class="stepper" id="stepper">
+    <button class="step-tab active" onclick="goStep(0)"><span class="step-num">1</span>基本信息</button>
+    <button class="step-tab" onclick="goStep(1)"><span class="step-num">2</span>模块确认</button>
+    <button class="step-tab" onclick="goStep(2)"><span class="step-num">3</span>逐一澄清</button>
+    <button class="step-tab" onclick="goStep(3)"><span class="step-num">4</span>补充信息</button>
+    <button class="step-tab" onclick="goStep(4)"><span class="step-num">5</span>确认提交</button>
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+
+  <!-- ==================== STEP 0: 基本信息 ==================== -->
+  <div class="step-content" id="step-0">
+    <div class="card">
+      <div class="section-title">📋 基本信息</div>
+      <p class="section-desc">请先填写企业基本信息，方便我们后续对接。</p>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">企业名称 <span class="required">*</span></label>
+          <input type="text" id="f-company" placeholder="请输入企业全称" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">所属行业 <span class="required">*</span></label>
+          <select id="f-industry">
+            <option value="">请选择行业</option>
+            <option>教育培训</option>
+            <option>企业服务</option>
+            <option>本地生活</option>
+            <option>电商零售</option>
+            <option>金融科技</option>
+            <option>医疗健康</option>
+            <option>制造业</option>
+            <option>其他</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">企业规模 <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="f-size" value="1-50人" /> <span class="radio-label">1-50人</span></label>
+            <label class="radio-item"><input type="radio" name="f-size" value="50-200人" /> <span class="radio-label">50-200人</span></label>
+            <label class="radio-item"><input type="radio" name="f-size" value="200-1000人" /> <span class="radio-label">200-1000人</span></label>
+            <label class="radio-item"><input type="radio" name="f-size" value="1000人以上" /> <span class="radio-label">1000人以上</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">业务负责人 <span class="required">*</span></label>
+          <input type="text" id="f-owner" placeholder="姓名 + 职位" />
+          <div class="form-hint">将作为项目主要对接人</div>
+        </div>
+      </div>
+
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">预计启动时间 <span class="optional">可选</span></label>
+          <input type="date" id="f-start-date" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">预算范围 <span class="optional">可选</span></label>
+          <select id="f-budget">
+            <option value="">暂不确定</option>
+            <option>10万以内</option>
+            <option>10-30万</option>
+            <option>30-50万</option>
+            <option>50-100万</option>
+            <option>100万以上</option>
+            <option>分阶段投入，需报价</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">当前已在使用的信息化/AI 工具 <span class="optional">可选</span></label>
+        <textarea id="f-existing-tools" placeholder="例如：钉钉（考勤+审批）、企业微信、CRM系统、飞书多维表格、自研系统等"></textarea>
+        <div class="form-hint">帮助我们了解现有系统，评估对接难度</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== STEP 1: 模块确认 ==================== -->
+  <div class="step-content hidden" id="step-1">
+    <div class="card">
+      <div class="section-title">🧩 需求模块确认</div>
+      <p class="section-desc">以下模块来自初步沟通，请确认哪些是本阶段需要推进的，并为每个模块标注优先级。</p>
+
+      <div class="tip-box">
+        💡 <strong>提示：</strong>优先级将直接影响我们的 MVP 范围和排期建议。如果暂时不确定，可以选择"待讨论"。
+      </div>
+
+      <!-- Module: AI知识库 -->
+      <div class="module-card">
+        <div class="module-header">
+          <div>
+            <div class="module-name">AI 知识库</div>
+            <div class="radio-desc" style="font-size:12px;color:var(--muted);margin-top:4px;">企业内部资料、培训视频、产品文档的 AI 可检索问答系统</div>
+          </div>
+          <span class="module-tag tag-mid">初步沟通</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">本阶段是否需要 <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="m-kb" value="需要" /> <span class="radio-label">需要推进</span></label>
+            <label class="radio-item"><input type="radio" name="m-kb" value="暂不需要" /> <span class="radio-label">暂不需要</span></label>
+            <label class="radio-item"><input type="radio" name="m-kb" value="待讨论" /> <span class="radio-label">待讨论</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">优先级（如需要）</label>
+          <div class="priority-selector">
+            <button class="priority-btn" onclick="setPriority(this,'kb','high')">高</button>
+            <button class="priority-btn" onclick="setPriority(this,'kb','mid')">中</button>
+            <button class="priority-btn" onclick="setPriority(this,'kb','low')">低</button>
+          </div>
+          <input type="hidden" id="p-kb" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">补充说明 <span class="optional">可选</span></label>
+          <textarea id="t-kb" placeholder="您对知识库的具体期望，例如：支持哪些文档类型、是否需要按部门隔离、对准确率的期望等"></textarea>
+        </div>
+      </div>
+
+      <!-- Module: 发圈助手 -->
+      <div class="module-card">
+        <div class="module-header">
+          <div>
+            <div class="module-name">发圈助手</div>
+            <div class="radio-desc" style="font-size:12px;color:var(--muted);margin-top:4px;">结合热点与员工风格，自动生成朋友圈推广内容</div>
+          </div>
+          <span class="module-tag tag-mid">初步沟通</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">本阶段是否需要 <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="m-fq" value="需要" /> <span class="radio-label">需要推进</span></label>
+            <label class="radio-item"><input type="radio" name="m-fq" value="暂不需要" /> <span class="radio-label">暂不需要</span></label>
+            <label class="radio-item"><input type="radio" name="m-fq" value="待讨论" /> <span class="radio-label">待讨论</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">优先级（如需要）</label>
+          <div class="priority-selector">
+            <button class="priority-btn" onclick="setPriority(this,'fq','high')">高</button>
+            <button class="priority-btn" onclick="setPriority(this,'fq','mid')">中</button>
+            <button class="priority-btn" onclick="setPriority(this,'fq','low')">低</button>
+          </div>
+          <input type="hidden" id="p-fq" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">补充说明 <span class="optional">可选</span></label>
+          <textarea id="t-fq" placeholder="例如：希望覆盖哪些平台（朋友圈/小红书/抖音）、是否需要配图、发布流程等"></textarea>
+        </div>
+      </div>
+
+      <!-- Module: 绩效助手 -->
+      <div class="module-card">
+        <div class="module-header">
+          <div>
+            <div class="module-name">绩效助手</div>
+            <div class="radio-desc" style="font-size:12px;color:var(--muted);margin-top:4px;">通过 AI Agent 追踪员工任务、目标进展与绩效状态</div>
+          </div>
+          <span class="module-tag tag-high">高优先级</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">本阶段是否需要 <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="m-jx" value="需要" /> <span class="radio-label">需要推进</span></label>
+            <label class="radio-item"><input type="radio" name="m-jx" value="暂不需要" /> <span class="radio-label">暂不需要</span></label>
+            <label class="radio-item"><input type="radio" name="m-jx" value="待讨论" /> <span class="radio-label">待讨论</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">优先级（如需要）</label>
+          <div class="priority-selector">
+            <button class="priority-btn" onclick="setPriority(this,'jx','high')">高</button>
+            <button class="priority-btn" onclick="setPriority(this,'jx','mid')">中</button>
+            <button class="priority-btn" onclick="setPriority(this,'jx','low')">低</button>
+          </div>
+          <input type="hidden" id="p-jx" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">补充说明 <span class="optional">可选</span></label>
+          <textarea id="t-jx" placeholder="例如：当前绩效考核方式（KPI/OKR）、需要接入的系统、AI的权限边界等"></textarea>
+        </div>
+      </div>
+
+      <!-- Module: 获客助手 -->
+      <div class="module-card">
+        <div class="module-header">
+          <div>
+            <div class="module-name">获客助手</div>
+            <div class="radio-desc" style="font-size:12px;color:var(--muted);margin-top:4px;">对小红书等平台的潜在线索进行识别、评分与转化跟进</div>
+          </div>
+          <span class="module-tag tag-mid">初步沟通</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">本阶段是否需要 <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="m-kh" value="需要" /> <span class="radio-label">需要推进</span></label>
+            <label class="radio-item"><input type="radio" name="m-kh" value="暂不需要" /> <span class="radio-label">暂不需要</span></label>
+            <label class="radio-item"><input type="radio" name="m-kh" value="待讨论" /> <span class="radio-label">待讨论</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">优先级（如需要）</label>
+          <div class="priority-selector">
+            <button class="priority-btn" onclick="setPriority(this,'kh','high')">高</button>
+            <button class="priority-btn" onclick="setPriority(this,'kh','mid')">中</button>
+            <button class="priority-btn" onclick="setPriority(this,'kh','low')">低</button>
+          </div>
+          <input type="hidden" id="p-kh" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">补充说明 <span class="optional">可选</span></label>
+          <textarea id="t-kh" placeholder="例如：线索来源平台、评分规则、是否允许自动触达、转化目标等"></textarea>
+        </div>
+      </div>
+
+      <!-- Module: 企业微信迁移 -->
+      <div class="module-card">
+        <div class="module-header">
+          <div>
+            <div class="module-name">企业微信迁移</div>
+            <div class="radio-desc" style="font-size:12px;color:var(--muted);margin-top:4px;">从钉钉到企业微信的系统迁移与业务流程承接</div>
+          </div>
+          <span class="module-tag tag-low">后置规划</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">本阶段是否需要 <span class="required">*</span></label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="m-qywx" value="需要" /> <span class="radio-label">需要推进</span></label>
+            <label class="radio-item"><input type="radio" name="m-qywx" value="暂不需要" /> <span class="radio-label">暂不需要</span></label>
+            <label class="radio-item"><input type="radio" name="m-qywx" value="待讨论" /> <span class="radio-label">待讨论</span></label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">优先级（如需要）</label>
+          <div class="priority-selector">
+            <button class="priority-btn" onclick="setPriority(this,'qywx','high')">高</button>
+            <button class="priority-btn" onclick="setPriority(this,'qywx','mid')">中</button>
+            <button class="priority-btn" onclick="setPriority(this,'qywx','low')">低</button>
+          </div>
+          <input type="hidden" id="p-qywx" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">补充说明 <span class="optional">可选</span></label>
+          <textarea id="t-qywx" placeholder="例如：当前钉钉使用情况、是否需要历史数据迁移、双轨并行计划等"></textarea>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== STEP 2: 逐一澄清 ==================== -->
+  <div class="step-content hidden" id="step-2">
+
+    <!-- 知识库澄清 -->
+    <div class="card">
+      <div class="section-title">📚 AI 知识库 — 详细澄清</div>
+      <p class="section-desc">请尽量填写，不清楚的可以跳过，我们可以安排访谈补充。</p>
+
+      <div class="form-group">
+        <label class="form-label">目前有多少种/多少份文档需要纳入知识库？</label>
+        <textarea id="d-kb-docs" placeholder="例如：产品手册约50份、培训视频约30个、内部SOP约20份..."></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">知识库内容是否需要按部门/岗位/角色设置权限隔离？</label>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="d-kb-auth" value="是，需要严格隔离" /> <span class="radio-label">是，需要严格隔离</span></label>
+          <label class="radio-item"><input type="radio" name="d-kb-auth" value="部分隔离" /> <span class="radio-label">部分隔离即可</span></label>
+          <label class="radio-item"><input type="radio" name="d-kb-auth" value="暂不需要" /> <span class="radio-label">暂不需要，全员通用</span></label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">是否包含敏感数据（客户信息、财务数据、薪酬等）？</label>
+        <textarea id="d-kb-sensitive" placeholder="如有，请说明哪些内容需要特别处理"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">对 AI 回答准确率的期望（可多选）</label>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" value="90%以上" /> <span class="radio-label">90% 以上（接近专业人工水平）</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="80%左右" /> <span class="radio-label">80% 左右（可接受偶尔需人工纠正）</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="暂不清楚" /> <span class="radio-label">暂不清楚，希望看到 Demo 后判断</span></label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">视频内容是否有字幕？是否需要 AI 自动转写？</label>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="d-kb-video" value="已有字幕" /> <span class="radio-label">视频已有字幕，可直接使用</span></label>
+          <label class="radio-item"><input type="radio" name="d-kb-video" value="需要转写" /> <span class="radio-label">需要 AI 自动转写</span></label>
+          <label class="radio-item"><input type="radio" name="d-kb-video" value="暂不涉及" /> <span class="radio-label">暂不涉及视频内容</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 绩效助手澄清 -->
+    <div class="card">
+      <div class="section-title">📊 绩效助手 — 详细澄清</div>
+      <p class="section-desc">这是对需求边界要求最高的模块，请尽量详细说明。</p>
+
+      <div class="form-group">
+        <label class="form-label">绩效助手最终希望达到什么效果？<span class="required">*</span></label>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="d-jx-goal" value="提醒建议" /> <span class="radio-label"><strong>提醒建议</strong> — AI 提供数据洞察和管理建议，最终由人来决策</span><div class="radio-desc">推荐此方式，风险可控</div></label>
+          <label class="radio-item"><input type="radio" name="d-jx-goal" value="自动评分" /> <span class="radio-label"><strong>自动评分</strong> — AI 直接参与或决定绩效评分</span><div class="radio-desc">需注意员工接受度和法律风险</div></label>
+          <label class="radio-item"><input type="radio" name="d-jx-goal" value="暂不确定" /> <span class="radio-label">暂不确定，希望看到 Demo 后再决定</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">当前绩效考核维度是什么？</label>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" value="KPI指标" /> <span class="radio-label">KPI 指标</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="OKR目标" /> <span class="radio-label">OKR 目标管理</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="销售业绩" /> <span class="radio-label">销售业绩</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="行为数据" /> <span class="radio-label">行为数据（打卡、日志、客户跟进等）</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="项目进度" /> <span class="radio-label">项目进度</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="其他" /> <span class="radio-label">其他（请在下方补充说明）</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">需要接入哪些系统的数据？<span class="required">*</span></label>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" value="钉钉" /> <span class="radio-label">钉钉（考勤、日报、审批等）</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="企业微信" /> <span class="radio-label">企业微信</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="CRM系统" /> <span class="radio-label">CRM 系统（请注明品牌/自研）</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="表格/飞书多维" /> <span class="radio-label">Excel / 飞书多维表格</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="工单系统" /> <span class="radio-label">工单系统</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="暂不清楚" /> <span class="radio-label">暂不清楚，需要你们评估</span></label>
+        </div>
+        <textarea id="d-jx-systems-other" placeholder="请注明其他系统名称或补充说明" style="margin-top:8px;"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">"心跳机制"具体是指什么？<span class="optional">可选</span></label>
+        <textarea id="d-jx-heartbeat" placeholder="例如：员工每日任务完成状态心跳、系统运行监控心跳、目标偏离实时预警等"></textarea>
+        <div class="form-hint">这是技术术语，不清楚可以直接跳过，我们安排访谈确认</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">AI 是否允许读取员工聊天记录、日报、客户跟进记录？</label>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="d-jx-privacy" value="允许，已获员工知情" /> <span class="radio-label">允许，员工已知情并同意</span></label>
+          <label class="radio-item"><input type="radio" name="d-jx-privacy" value="仅限工作相关" /> <span class="radio-label">仅限工作相关数据（日报、工单等），不包含聊天</span></label>
+          <label class="radio-item"><input type="radio" name="d-jx-privacy" value="暂不涉及" /> <span class="radio-label">暂不涉及隐私数据，用汇总数据即可</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 发圈助手澄清 -->
+    <div class="card">
+      <div class="section-title">✍️ 发圈助手 — 详细澄清</div>
+
+      <div class="form-group">
+        <label class="form-label">热点内容希望从哪些来源获取？</label>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" value="微博热搜" /> <span class="radio-label">微博热搜</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="抖音热点" /> <span class="radio-label">抖音热点</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="小红书" /> <span class="radio-label">小红书</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="行业媒体" /> <span class="radio-label">行业媒体 / 公众号</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="产品热点" /> <span class="radio-label">产品自有热点（由公司手动提供）</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">员工个性化风格希望如何定义？</label>
+        <textarea id="d-fq-style" placeholder="例如：专业型、亲和力型、幽默型、干货型，或由员工自行选择/设定标签"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">生成的内容是否需要人工审核后再发布？</label>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="d-fq-review" value="必须人工审核" /> <span class="radio-label">必须人工审核后发布（推荐）</span></label>
+          <label class="radio-item"><input type="radio" name="d-fq-review" value="部分自动" /> <span class="radio-label">低风险内容可自动发布，高风险需审核</span></label>
+          <label class="radio-item"><input type="radio" name="d-fq-review" value="暂不确定" /> <span class="radio-label">暂不确定</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 获客助手澄清 -->
+    <div class="card">
+      <div class="section-title">🎯 获客助手 — 详细澄清</div>
+
+      <div class="form-group">
+        <label class="form-label">线索评分规则目前是如何定义的？</label>
+        <textarea id="d-kh-score" placeholder="例如：互动频次、私信内容关键词、账号活跃度等，如暂不清楚可留空"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">是否允许系统自动向潜客发送消息？</label>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="d-kh-auto" value="禁止自动" /> <span class="radio-label">禁止自动发送，必须人工操作（推荐，避免封号）</span></label>
+          <label class="radio-item"><input type="radio" name="d-kh-auto" value="部分自动" /> <span class="radio-label">可以自动发送，但需人工审核话术</span></label>
+          <label class="radio-item"><input type="radio" name="d-kh-auto" value="暂不确定" /> <span class="radio-label">暂不确定，需要你们评估风险</span></label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">如何定义"转化成功"？</label>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" value="加微信" /> <span class="radio-label">成功添加微信/企微</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="预约咨询" /> <span class="radio-label">预约咨询/演示</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="成交" /> <span class="radio-label">正式成交</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="复购" /> <span class="radio-label">复购/续费</span></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== STEP 3: 补充信息 ==================== -->
+  <div class="step-content hidden" id="step-3">
+    <div class="card">
+      <div class="section-title">📌 补充信息</div>
+      <p class="section-desc">以下问题将帮助我们更精准地制定方案。</p>
+
+      <div class="form-group">
+        <label class="form-label">本项目的成功标准是什么？（如何判断项目做成了）<span class="optional">可选</span></label>
+        <textarea id="s-success" placeholder="例如：知识库回答准确率达到85%、员工使用率达到80%、获客成本降低30%等"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">是否有硬性时间节点？（如配合某次发布会、某个季度考核等）<span class="optional">可选</span></label>
+        <input type="text" id="s-deadline" placeholder="例如：希望在 Q3 前上线核心功能" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">是否涉及敏感数据或合规要求？（如个人信息保护、行业监管等）<span class="optional">可选</span></label>
+        <textarea id="s-compliance" placeholder="如有，请说明"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">除了上述模块，是否还有其他 AI 需求或想法？<span class="optional">可选</span></label>
+        <textarea id="s-other" placeholder="请描述您的想法，哪怕是模糊的方向也可以"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">希望我们下一步提供什么？<span class="required">*</span></label>
+        <div class="checkbox-group">
+          <label class="checkbox-item"><input type="checkbox" value="MVP方案+报价" /> <span class="radio-label">MVP 方案 + 正式报价</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="Demo演示" /> <span class="radio-label">先做 Demo 演示验证价值</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="详细方案" /> <span class="radio-label">详细技术方案文档</span></label>
+          <label class="checkbox-item"><input type="checkbox" value="上门访谈" /> <span class="radio-label">安排上门/线上访谈进一步澄清</span></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== STEP 4: 确认提交 ==================== -->
+  <div class="step-content hidden" id="step-4">
+    <div class="card">
+      <div class="section-title">✅ 确认提交</div>
+      <p class="section-desc">请确认以下信息无误，确认后我们将基于您填写的内容制定方案。</p>
+
+      <div class="tip-box">
+        💡 提交后，您可以随时联系我们补充或修改信息。如有不清楚的问题，我们选择"待讨论"或留空即可，不必有压力。
+      </div>
+
+      <div id="result-preview">
+        <!-- JS 动态生成预览 -->
+      </div>
+
+      <div class="form-group" style="margin-top:24px;">
+        <label class="form-label">您的邮箱（用于接收方案）<span class="required">*</span></label>
+        <input type="email" id="f-email" placeholder="请输入邮箱地址" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">手机号（可选，方便我们电话沟通）</label>
+        <input type="text" id="f-phone" placeholder="请输入手机号" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:20%"></div></div>
+    <div class="progress-text" id="progress-text">Step 1 / 5 · 基本信息</div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- Nav Bar -->
+<div class="nav-bar">
+  <button class="btn btn-prev" id="btn-prev" onclick="prevStep()">← 上一步</button>
+  <button class="btn btn-next" id="btn-next" onclick="nextStep()">下一步 →</button>
+  <button class="btn btn-submit hidden" id="btn-submit" onclick="submitForm()">确认提交</button>
+</div>
+
+<script>
+  let currentStep = 0;
+  const totalSteps = 5;
+  const stepTitles = ['基本信息', '模块确认', '逐一澄清', '补充信息', '确认提交'];
+
+  function goStep(n) {
+    if (n < 0 || n >= totalSteps) return;
+    currentStep = n;
+    updateView();
+  }
+
+  function nextStep() {
+    if (currentStep < totalSteps - 1) {
+      currentStep++;
+      updateView();
+    }
+  }
+
+  function prevStep() {
+    if (currentStep > 0) {
+      currentStep--;
+      updateView();
+    }
+  }
+
+  function updateView() {
+    // Hide all steps
+    document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
+    document.getElementById('step-' + currentStep).classList.remove('hidden');
+
+    // Update stepper tabs
+    document.querySelectorAll('.step-tab').forEach((tab, i) => {
+      tab.classList.remove('active', 'done');
+      if (i === currentStep) tab.classList.add('active');
+      else if (i < currentStep) tab.classList.add('done');
+    });
+
+    // Update progress
+    const pct = ((currentStep + 1) / totalSteps) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-text').textContent = 'Step ' + (currentStep + 1) + ' / ' + totalSteps + ' · ' + stepTitles[currentStep];
+
+    // Update nav buttons
+    document.getElementById('btn-prev').classList.toggle('hidden', currentStep === 0);
+    document.getElementById('btn-next').classList.toggle('hidden', currentStep === totalSteps - 1);
+    document.getElementById('btn-submit').classList.toggle('hidden', currentStep !== totalSteps - 1);
+
+    if (currentStep === totalSteps - 1) buildPreview();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function setPriority(btn, module, level) {
+    const container = btn.parentElement;
+    container.querySelectorAll('.priority-btn').forEach(b => b.className = 'priority-btn');
+    btn.classList.add('selected-' + level);
+    document.getElementById('p-' + module).value = level;
+  }
+
+  // Radio/checkbox visual feedback
+  document.addEventListener('change', function(e) {
+    if (e.target.type === 'radio') {
+      const name = e.target.name;
+      document.querySelectorAll('input[name="' + name + '"]').forEach(r => r.closest('.radio-item') && r.closest('.radio-item').classList.remove('selected'));
+      if (e.target.closest('.radio-item')) e.target.closest('.radio-item').classList.add('selected');
+    }
+    if (e.target.type === 'checkbox') {
+      if (e.target.closest('.checkbox-item')) {
+        e.target.checked
+          ? e.target.closest('.checkbox-item').classList.add('selected')
+          : e.target.closest('.checkbox-item').classList.remove('selected');
+      }
+    }
+  });
+
+  function buildPreview() {
+    const el = document.getElementById('result-preview');
+    const company = document.getElementById('f-company').value || '（未填写）';
+    const owner = document.getElementById('f-owner').value || '（未填写）';
+    const budget = document.getElementById('f-budget').value || '（未填写）';
+    const startDate = document.getElementById('f-start-date').value || '（未填写）';
+
+    let modulesHtml = '';
+    ['kb','fq','jx','kh','qywx'].forEach(key => {
+      const nameMap = {kb:'AI 知识库',fq:'发圈助手',jx:'绩效助手',kh:'获客助手',qywx:'企业微信迁移'};
+      const checked = document.querySelector('input[name="m-' + key + '"]:checked');
+      const need = checked ? checked.value : '（未选择）';
+      const priority = document.getElementById('p-' + key).value;
+      const note = document.getElementById('t-' + key).value;
+      const priLabel = priority === 'high' ? '高' : priority === 'mid' ? '中' : priority === 'low' ? '低' : '（未设置）';
+      modulesHtml += '<tr><td><strong>' + nameMap[key] + '</strong></td><td>' + need + '</td><td>' + priLabel + '</td><td>' + (note || '（无）') + '</td></tr>';
+    });
+
+    el.innerHTML = `
+      <div class="result-section">
+        <h3>企业基本信息</h3>
+        <div class="result-row"><div class="label">企业名称</div><div class="value">${company}</div></div>
+        <div class="result-row"><div class="label">业务负责人</div><div class="value">${owner}</div></div>
+        <div class="result-row"><div class="label">预算范围</div><div class="value">${budget}</div></div>
+        <div class="result-row"><div class="label">预计启动</div><div class="value">${startDate}</div></div>
+      </div>
+      <div class="result-section">
+        <h3>模块需求确认</h3>
+        <table class="result-table">
+          <tr><th>模块</th><th>是否需要</th><th>优先级</th><th>补充说明</th></tr>
+          ${modulesHtml}
+        </table>
+      </div>
+      <div class="result-section">
+        <h3>下一步期望</h3>
+        <div class="result-row"><div class="label">期望输出</div><div class="value" id="prev-next-action">（请在 Step 4 中选择）</div></div>
+      </div>
+    `;
+
+    // Next action
+    const nextActions = [];
+    document.querySelectorAll('#step-3 input[type="checkbox"]:checked').forEach(cb => nextActions.push(cb.value));
+    const prevEl = document.getElementById('prev-next-action');
+    if (prevEl) prevEl.textContent = nextActions.length ? nextActions.join('、') : '（未选择）';
+  }
+
+  function submitForm() {
+    const email = document.getElementById('f-email').value;
+    if (!email) {
+      alert('请填写邮箱地址，以便我们向您发送方案。');
+      return;
+    }
+
+    // Build final data object
+    const data = {
+      company: document.getElementById('f-company').value,
+      industry: document.getElementById('f-industry').value,
+      owner: document.getElementById('f-owner').value,
+      email: email,
+      phone: document.getElementById('f-phone').value,
+      submittedAt: new Date().toISOString()
+    };
+
+    // In production: send to backend / 腾讯文档 / 企微机器人
+    // For now: download as JSON
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'AI需求确认表_' + (data.company || '客户') + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    alert('提交成功！\n\n我们将根据您填写的内容，在 3 个工作日内与您联系并提供初步方案。\n\n感谢您的信任！');
+  }
+
+  // Init
+  updateView();
+</script>
+</body>
+</html>
