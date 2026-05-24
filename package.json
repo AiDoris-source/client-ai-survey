@@ -1,0 +1,13 @@
+{
+  "name": "client-survey-bridge",
+  "version": "1.0.0",
+  "description": "Bridge service: Client survey form → Tencent Docs smart sheet",
+  "main": "api/submit.js",
+  "scripts": {
+    "start": "node submit_bridge.js",
+    "dev": "node submit_bridge.js"
+  },
+  "keywords": ["survey", "tencent-docs", "bridge"],
+  "author": "Claw",
+  "license": "MIT"
+}
