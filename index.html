@@ -1134,8 +1134,7 @@
     for (const [key, value] of Object.entries(data)) {
       body += '%【' + key + '】%0A' + value.replace(/\n/g,'%0A') + '%0A%0A';
     }
-    // 收件人改成你的邮箱（请替换下面这行）
-    const yourEmail = 'zhuoen@yourcompany.com';
+    const yourEmail = 'parentinglove313@163.com';
     const mailtoLink = 'mailto:' + yourEmail
       + '?subject=' + encodeURIComponent('【需求确认】' + company)
       + '&body=' + body;
